@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFA World Cup 2026 — Full Schedule in IST</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0c10;--bg2:#111318;--bg3:#181c24;
+    --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+    --text:#e8eaf0;--muted:#7a7f8e;--accent:#c9a84c;--accent2:#e8c56b;
+    --group-b:#4da6ff;--r32-b:#4dcc88;--r16-b:#9966ff;
+    --qf-b:#ff6666;--sf-b:#ffaa33;--f-b:#c9a84c;
+    --radius:10px;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh}
+  header{position:sticky;top:0;z-index:100;background:rgba(10,12,16,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.5rem}
+  .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:1rem;height:60px;flex-wrap:wrap}
+  .logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--accent);white-space:nowrap}
+  .logo span{color:var(--text)}
+  .match-count{font-size:12px;color:var(--muted);white-space:nowrap}
+  .match-count strong{color:var(--accent2)}
+  .header-controls{display:flex;align-items:center;gap:8px;flex:1;justify-content:flex-end;flex-wrap:wrap}
+  .search-wrap{position:relative}
+  .search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+  input[type=text]{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:inherit;font-size:13px;padding:7px 12px 7px 32px;width:190px;outline:none;transition:border-color .2s}
+  input[type=text]:focus{border-color:var(--accent)}
+  input[type=text]::placeholder{color:var(--muted)}
+  select{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:inherit;font-size:13px;padding:7px 12px;outline:none;cursor:pointer}
+  select:focus{border-color:var(--accent)}
+  .filters-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 1.5rem;overflow-x:auto}
+  .filters-inner{max-width:1200px;margin:0 auto;display:flex;gap:6px;flex-wrap:nowrap;align-items:center}
+  .filter-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;margin-right:4px}
+  .pill{padding:5px 12px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-family:inherit;font-size:12px;cursor:pointer;white-space:nowrap;transition:all .15s}
+  .pill:hover{border-color:var(--accent);color:var(--accent)}
+  .pill.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600}
+  main{max-width:1200px;margin:0 auto;padding:1.5rem}
+  .date-group{margin-bottom:2rem}
+  .date-heading{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .date-label{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;color:var(--text)}
+  .date-sub{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .today-badge{font-size:10px;padding:2px 8px;background:var(--accent);color:#000;border-radius:10px;font-weight:700;text-transform:uppercase}
+  .date-line{flex:1;height:1px;background:var(--border)}
+  .match-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;transition:border-color .15s,transform .15s;position:relative;overflow:hidden}
+  .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+  .card:hover{border-color:var(--border2);transform:translateY(-1px)}
+  .card.today-match{border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.04)}
+  .card.stage-group::before{background:var(--group-b)}
+  .card.stage-r32::before{background:var(--r32-b)}
+  .card.stage-r16::before{background:var(--r16-b)}
+  .card.stage-qf::before{background:var(--qf-b)}
+  .card.stage-sf::before{background:var(--sf-b)}
+  .card.stage-final::before{background:var(--f-b)}
+  .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .stage-badge{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;padding:3px 8px;border-radius:6px}
+  .stage-group .stage-badge{background:rgba(77,166,255,.12);color:var(--group-b)}
+  .stage-r32 .stage-badge{background:rgba(77,204,136,.12);color:var(--r32-b)}
+  .stage-r16 .stage-badge{background:rgba(153,102,255,.12);color:var(--r16-b)}
+  .stage-qf .stage-badge{background:rgba(255,102,102,.12);color:var(--qf-b)}
+  .stage-sf .stage-badge{background:rgba(255,170,51,.12);color:var(--sf-b)}
+  .stage-final .stage-badge{background:rgba(201,168,76,.15);color:var(--accent2)}
+  .match-num{font-size:11px;color:var(--muted)}
+  .teams{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .team{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .team-flag{font-size:24px;line-height:1}
+  .team-name{font-size:12px;font-weight:500;text-align:center;color:var(--text);line-height:1.2}
+  .team-name.tbd{color:var(--muted);font-style:italic}
+  .vs{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--muted);letter-spacing:1px;flex-shrink:0}
+  .card-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:9px;gap:6px;flex-wrap:wrap}
+  .venue{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px;min-width:0;flex:1}
+  .venue span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .times{text-align:right;flex-shrink:0}
+  .ist-time{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap}
+  .local-time{font-size:10px;color:var(--muted);white-space:nowrap}
+  .empty{text-align:center;padding:4rem 2rem;color:var(--muted)}
+  .empty h3{font-size:18px;margin-bottom:8px;color:var(--text)}
+  .legend{padding:8px 1.5rem;background:var(--bg2);border-bottom:1px solid var(--border)}
+  .legend-inner{max-width:1200px;margin:0 auto;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);white-space:nowrap}
+  .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .ist-note{text-align:center;font-size:11px;color:var(--muted);padding:5px;background:rgba(201,168,76,.04);border-bottom:1px solid var(--border)}
+  .ist-note strong{color:var(--accent2)}
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+  @media(max-width:600px){
+    .header-inner{height:auto;padding:8px 0;gap:6px}
+    input[type=text]{width:140px}
+    .match-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">FIFA <span>World Cup</span> 2026</div>
+    <div class="match-count">Showing <strong id="count">104</strong> of 104 matches</div>
+    <div class="header-controls">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search" placeholder="Search team, city…">
+      </div>
+      <select id="groupFilter">
+        <option value="">All groups</option>
+        <option>Group A</option><option>Group B</option><option>Group C</option>
+        <option>Group D</option><option>Group E</option><option>Group F</option>
+        <option>Group G</option><option>Group H</option><option>Group I</option>
+        <option>Group J</option><option>Group K</option><option>Group L</option>
+      </select>
+    </div>
+  </div>
+</header>
+<div class="legend">
+  <div class="legend-inner">
+    <div class="legend-item"><div class="legend-dot" style="background:#4da6ff"></div>Group Stage</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4dcc88"></div>Round of 32</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9966ff"></div>Round of 16</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ff6666"></div>Quarterfinal</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffaa33"></div>Semifinal</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c9a84c"></div>Final</div>
+  </div>
+</div>
+<div class="ist-note">All times in <strong>Indian Standard Time (IST, UTC+5:30)</strong></div>
+<div class="filters-bar">
+  <div class="filters-inner" id="stageFilters">
+    <span class="filter-label">Stage:</span>
+  </div>
+</div>
+<main id="main"></main>
+
+<script>
+const FLAGS={
+  "Mexico":"🇲🇽","South Africa":"🇿🇦","Korea Republic":"🇰🇷","Czechia":"🇨🇿",
+  "Canada":"🇨🇦","Bosnia and Herzegovina":"🇧🇦","Qatar":"🇶🇦","Switzerland":"🇨🇭",
+  "Brazil":"🇧🇷","Morocco":"🇲🇦","Haiti":"🇭🇹","Scotland":"🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+  "USA":"🇺🇸","Paraguay":"🇵🇾","Australia":"🇦🇺","Türkiye":"🇹🇷",
+  "Germany":"🇩🇪","Curaçao":"🇨🇼","Côte d'Ivoire":"🇨🇮","Ecuador":"🇪🇨",
+  "Netherlands":"🇳🇱","Japan":"🇯🇵","Sweden":"🇸🇪","Tunisia":"🇹🇳",
+  "Belgium":"🇧🇪","Egypt":"🇪🇬","IR Iran":"🇮🇷","New Zealand":"🇳🇿",
+  "Spain":"🇪🇸","Cabo Verde":"🇨🇻","Saudi Arabia":"🇸🇦","Uruguay":"🇺🇾",
+  "France":"🇫🇷","Senegal":"🇸🇳","Iraq":"🇮🇶","Norway":"🇳🇴",
+  "Argentina":"🇦🇷","Algeria":"🇩🇿","Austria":"🇦🇹","Jordan":"🇯🇴",
+  "Portugal":"🇵🇹","Congo DR":"🇨🇩","Uzbekistan":"🇺🇿","Colombia":"🇨🇴",
+  "England":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Croatia":"🇭🇷","Ghana":"🇬🇭","Panama":"🇵🇦"
+};
+function flag(n){return FLAGS[n]||"🏳️"}
+
+// Convert ET offset to UTC: ET = UTC-4 (EDT summer), CT = UTC-5, MT = UTC-6, PT = UTC-7
+// Mexico City = UTC-5 (CDT), Vancouver = UTC-7 (PDT), Toronto = UTC-4 (EDT)
+function etToIST(dateStr, etH, etM, tz){
+  // offset from local to UTC
+  const offsets={"ET":4,"CT":5,"MT":6,"PT":7,"MX":5,"CA-PT":7,"CA-ET":4};
+  const off=offsets[tz]||4;
+  let utcH=etH+off; let d=new Date(dateStr+"T12:00:00Z");
+  if(utcH>=24){utcH-=24;d=new Date(d.getTime()+86400000)}
+  if(utcH<0){utcH+=24;d=new Date(d.getTime()-86400000)}
+  const utc=new Date(dateStr+"T"+String(utcH).padStart(2,"0")+":"+String(etM).padStart(2,"0")+":00Z");
+  // If day rolled over
+  const base=new Date(dateStr+"T00:00:00Z");
+  const utc2=new Date(base.getTime()+(etH+off)*3600000+etM*60000);
+  const ist=new Date(utc2.getTime()+5.5*3600000);
+  return ist;
+}
+function fmtT(d){return d.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",hour12:true})}
+function fmtLocal(etH,etM,tz){
+  let h=etH,suffix="";
+  const tzLabel={"ET":"ET","CT":"CT","MT":"MT","PT":"PT","MX":"CST","CA-PT":"PDT","CA-ET":"EDT"}[tz]||tz;
+  const ampm=h<12?"am":h===12?"pm":((h-=12),"pm");
+  if(h===0)h=12;
+  return `${h}:${String(etM).padStart(2,"0")}${ampm} ${tzLabel}`;
+}
+
+// [id, date, etH, etM, tz, team1, team2, venue, stage, group]
+// ET hours (local kickoff times from official schedule)
+const RAW=[
+  // ── GROUP STAGE MATCHDAY 1 (June 11-17) ──
+  [1,"2026-06-11",15,0,"ET","Mexico","South Africa","Estadio Azteca, Mexico City","Group Stage","Group A"],
+  [2,"2026-06-11",22,0,"ET","Korea Republic","Czechia","Estadio Akron, Guadalajara","Group Stage","Group A"],
+  [3,"2026-06-12",15,0,"CA-ET","Canada","Bosnia and Herzegovina","BMO Field, Toronto","Group Stage","Group B"],
+  [4,"2026-06-12",21,0,"PT","USA","Paraguay","SoFi Stadium, Los Angeles","Group Stage","Group D"],
+  [5,"2026-06-13",21,0,"ET","Haiti","Scotland","Gillette Stadium, Boston","Group Stage","Group C"],
+  [6,"2026-06-13",0,0,"CA-PT","Australia","Türkiye","BC Place, Vancouver","Group Stage","Group D"],
+  [7,"2026-06-13",18,0,"ET","Brazil","Morocco","MetLife Stadium, New York/NJ","Group Stage","Group C"],
+  [8,"2026-06-13",15,0,"PT","Qatar","Switzerland","Levi's Stadium, San Francisco","Group Stage","Group B"],
+  [9,"2026-06-14",19,0,"ET","Côte d'Ivoire","Ecuador","Lincoln Financial Field, Philadelphia","Group Stage","Group E"],
+  [10,"2026-06-14",13,0,"ET","Germany","Curaçao","NRG Stadium, Houston","Group Stage","Group E"],
+  [11,"2026-06-14",16,0,"CT","Netherlands","Japan","AT&T Stadium, Dallas","Group Stage","Group F"],
+  [12,"2026-06-14",22,0,"CT","Sweden","Tunisia","Estadio BBVA, Monterrey","Group Stage","Group F"],
+  [13,"2026-06-15",18,0,"ET","Saudi Arabia","Uruguay","Hard Rock Stadium, Miami","Group Stage","Group H"],
+  [14,"2026-06-15",12,0,"ET","Spain","Cabo Verde","Mercedes-Benz Stadium, Atlanta","Group Stage","Group H"],
+  [15,"2026-06-15",21,0,"PT","IR Iran","New Zealand","SoFi Stadium, Los Angeles","Group Stage","Group G"],
+  [16,"2026-06-15",15,0,"PT","Belgium","Egypt","Lumen Field, Seattle","Group Stage","Group G"],
+  [17,"2026-06-16",15,0,"ET","France","Senegal","MetLife Stadium, New York/NJ","Group Stage","Group I"],
+  [18,"2026-06-16",18,0,"ET","Iraq","Norway","Gillette Stadium, Boston","Group Stage","Group I"],
+  [19,"2026-06-16",21,0,"CT","Argentina","Algeria","Arrowhead Stadium, Kansas City","Group Stage","Group J"],
+  [20,"2026-06-16",0,0,"PT","Austria","Jordan","Levi's Stadium, San Francisco","Group Stage","Group J"],
+  [21,"2026-06-17",19,0,"CA-ET","Ghana","Panama","BMO Field, Toronto","Group Stage","Group L"],
+  [22,"2026-06-17",16,0,"CT","England","Croatia","AT&T Stadium, Dallas","Group Stage","Group L"],
+  [23,"2026-06-17",13,0,"ET","Portugal","Congo DR","NRG Stadium, Houston","Group Stage","Group K"],
+  [24,"2026-06-17",22,0,"ET","Uzbekistan","Colombia","Estadio Azteca, Mexico City","Group Stage","Group K"],
+
+  // ── GROUP STAGE MATCHDAY 2 (June 18-23) ──
+  [25,"2026-06-18",12,0,"ET","Czechia","South Africa","Mercedes-Benz Stadium, Atlanta","Group Stage","Group A"],
+  [26,"2026-06-18",15,0,"PT","Switzerland","Bosnia and Herzegovina","SoFi Stadium, Los Angeles","Group Stage","Group B"],
+  [27,"2026-06-18",18,0,"CA-PT","Canada","Qatar","BC Place, Vancouver","Group Stage","Group B"],
+  [28,"2026-06-18",21,0,"CT","Mexico","Korea Republic","Estadio Akron, Guadalajara","Group Stage","Group A"],
+  [29,"2026-06-19",20,30,"ET","Brazil","Haiti","Lincoln Financial Field, Philadelphia","Group Stage","Group C"],
+  [30,"2026-06-19",18,0,"ET","Scotland","Morocco","Gillette Stadium, Boston","Group Stage","Group C"],
+  [31,"2026-06-19",23,0,"PT","Türkiye","Paraguay","Levi's Stadium, San Francisco","Group Stage","Group D"],
+  [32,"2026-06-19",15,0,"PT","USA","Australia","Lumen Field, Seattle","Group Stage","Group D"],
+  [33,"2026-06-20",16,0,"CA-ET","Germany","Côte d'Ivoire","BMO Field, Toronto","Group Stage","Group E"],
+  [34,"2026-06-20",20,0,"CT","Ecuador","Curaçao","Arrowhead Stadium, Kansas City","Group Stage","Group E"],
+  [35,"2026-06-20",13,0,"ET","Netherlands","Sweden","NRG Stadium, Houston","Group Stage","Group F"],
+  [36,"2026-06-20",0,0,"CT","Tunisia","Japan","Estadio BBVA, Monterrey","Group Stage","Group F"],
+  [37,"2026-06-21",18,0,"ET","Uruguay","Cabo Verde","Hard Rock Stadium, Miami","Group Stage","Group H"],
+  [38,"2026-06-21",12,0,"ET","Spain","Saudi Arabia","Mercedes-Benz Stadium, Atlanta","Group Stage","Group H"],
+  [39,"2026-06-21",15,0,"PT","Belgium","IR Iran","SoFi Stadium, Los Angeles","Group Stage","Group G"],
+  [40,"2026-06-21",21,0,"CA-PT","New Zealand","Egypt","BC Place, Vancouver","Group Stage","Group G"],
+  [41,"2026-06-22",20,0,"ET","Norway","Senegal","MetLife Stadium, New York/NJ","Group Stage","Group I"],
+  [42,"2026-06-22",17,0,"ET","France","Iraq","Lincoln Financial Field, Philadelphia","Group Stage","Group I"],
+  [43,"2026-06-22",13,0,"CT","Argentina","Austria","AT&T Stadium, Dallas","Group Stage","Group J"],
+  [44,"2026-06-22",23,0,"PT","Jordan","Algeria","Levi's Stadium, San Francisco","Group Stage","Group J"],
+  [45,"2026-06-23",16,0,"ET","England","Ghana","Gillette Stadium, Boston","Group Stage","Group L"],
+  [46,"2026-06-23",19,0,"CA-ET","Panama","Croatia","BMO Field, Toronto","Group Stage","Group L"],
+  [47,"2026-06-23",13,0,"ET","Portugal","Uzbekistan","NRG Stadium, Houston","Group Stage","Group K"],
+  [48,"2026-06-23",22,0,"CT","Colombia","Congo DR","Estadio Akron, Guadalajara","Group Stage","Group K"],
+
+  // ── GROUP STAGE MATCHDAY 3 (June 24-27) ──
+  [49,"2026-06-24",18,0,"ET","Scotland","Brazil","Hard Rock Stadium, Miami","Group Stage","Group C"],
+  [50,"2026-06-24",18,0,"ET","Morocco","Haiti","Mercedes-Benz Stadium, Atlanta","Group Stage","Group C"],
+  [51,"2026-06-24",15,0,"CA-PT","Switzerland","Canada","BC Place, Vancouver","Group Stage","Group B"],
+  [52,"2026-06-24",15,0,"PT","Bosnia and Herzegovina","Qatar","Lumen Field, Seattle","Group Stage","Group B"],
+  [53,"2026-06-24",21,0,"ET","Czechia","Mexico","Estadio Azteca, Mexico City","Group Stage","Group A"],
+  [54,"2026-06-24",21,0,"CT","South Africa","Korea Republic","Estadio BBVA, Monterrey","Group Stage","Group A"],
+  [55,"2026-06-25",16,0,"ET","Curaçao","Côte d'Ivoire","Lincoln Financial Field, Philadelphia","Group Stage","Group E"],
+  [56,"2026-06-25",16,0,"ET","Ecuador","Germany","MetLife Stadium, New York/NJ","Group Stage","Group E"],
+  [57,"2026-06-25",19,0,"CT","Japan","Sweden","AT&T Stadium, Dallas","Group Stage","Group F"],
+  [58,"2026-06-25",19,0,"CT","Tunisia","Netherlands","Arrowhead Stadium, Kansas City","Group Stage","Group F"],
+  [59,"2026-06-25",22,0,"PT","Türkiye","USA","SoFi Stadium, Los Angeles","Group Stage","Group D"],
+  [60,"2026-06-25",22,0,"PT","Paraguay","Australia","Levi's Stadium, San Francisco","Group Stage","Group D"],
+  [61,"2026-06-26",15,0,"ET","Norway","France","Gillette Stadium, Boston","Group Stage","Group I"],
+  [62,"2026-06-26",15,0,"CA-ET","Senegal","Iraq","BMO Field, Toronto","Group Stage","Group I"],
+  [63,"2026-06-26",23,0,"PT","Egypt","IR Iran","Lumen Field, Seattle","Group Stage","Group G"],
+  [64,"2026-06-26",23,0,"CA-PT","New Zealand","Belgium","BC Place, Vancouver","Group Stage","Group G"],
+  [65,"2026-06-26",20,0,"ET","Cabo Verde","Saudi Arabia","NRG Stadium, Houston","Group Stage","Group H"],
+  [66,"2026-06-26",20,0,"CT","Uruguay","Spain","Estadio Akron, Guadalajara","Group Stage","Group H"],
+  [67,"2026-06-27",17,0,"ET","Panama","England","MetLife Stadium, New York/NJ","Group Stage","Group L"],
+  [68,"2026-06-27",17,0,"ET","Croatia","Ghana","Lincoln Financial Field, Philadelphia","Group Stage","Group L"],
+  [69,"2026-06-27",22,0,"CT","Algeria","Austria","Arrowhead Stadium, Kansas City","Group Stage","Group J"],
+  [70,"2026-06-27",22,0,"CT","Jordan","Argentina","AT&T Stadium, Dallas","Group Stage","Group J"],
+  [71,"2026-06-27",19,30,"ET","Colombia","Portugal","Hard Rock Stadium, Miami","Group Stage","Group K"],
+  [72,"2026-06-27",19,30,"ET","Congo DR","Uzbekistan","Mercedes-Benz Stadium, Atlanta","Group Stage","Group K"],
+
+  // ── ROUND OF 32 (July 7-12) ──
+  [73,"2026-07-07",15,0,"ET","1A","2B","MetLife Stadium, New York/NJ","Round of 32",""],
+  [74,"2026-07-07",19,0,"ET","1B","2A","Hard Rock Stadium, Miami","Round of 32",""],
+  [75,"2026-07-08",15,0,"PT","1C","2D","SoFi Stadium, Los Angeles","Round of 32",""],
+  [76,"2026-07-08",19,0,"ET","1D","2C","Gillette Stadium, Boston","Round of 32",""],
+  [77,"2026-07-09",15,0,"ET","1E","2F","Lincoln Financial Field, Philadelphia","Round of 32",""],
+  [78,"2026-07-09",19,0,"CT","1F","2E","AT&T Stadium, Dallas","Round of 32",""],
+  [79,"2026-07-10",15,0,"CT","1G","2H","Arrowhead Stadium, Kansas City","Round of 32",""],
+  [80,"2026-07-10",19,0,"CA-PT","1H","2G","BC Place, Vancouver","Round of 32",""],
+  [81,"2026-07-11",15,0,"CT","1I","2J","Estadio Akron, Guadalajara","Round of 32",""],
+  [82,"2026-07-11",19,0,"CT","1J","2I","Estadio BBVA, Monterrey","Round of 32",""],
+  [83,"2026-07-12",15,0,"ET","1K","2L","Mercedes-Benz Stadium, Atlanta","Round of 32",""],
+  [84,"2026-07-12",19,0,"CA-ET","1L","2K","BMO Field, Toronto","Round of 32",""],
+  [85,"2026-07-12",22,0,"PT","W73 vs W74","W75 vs W76","Lumen Field, Seattle","Round of 32",""],
+  [86,"2026-07-13",15,0,"ET","W77 vs W78","W79 vs W80","MetLife Stadium, New York/NJ","Round of 32",""],
+  [87,"2026-07-13",19,0,"ET","W81 vs W82","W83 vs W84","Hard Rock Stadium, Miami","Round of 32",""],
+  [88,"2026-07-14",15,0,"PT","W85","W86","SoFi Stadium, Los Angeles","Round of 32",""],
+
+  // ── ROUND OF 16 (July 18-21) ──
+  [89,"2026-07-18",15,0,"ET","R32 W1","R32 W2","MetLife Stadium, New York/NJ","Round of 16",""],
+  [90,"2026-07-18",19,0,"CT","R32 W3","R32 W4","AT&T Stadium, Dallas","Round of 16",""],
+  [91,"2026-07-19",15,0,"ET","R32 W5","R32 W6","Hard Rock Stadium, Miami","Round of 16",""],
+  [92,"2026-07-19",19,0,"PT","R32 W7","R32 W8","SoFi Stadium, Los Angeles","Round of 16",""],
+  [93,"2026-07-20",15,0,"ET","R32 W9","R32 W10","Lincoln Financial Field, Philadelphia","Round of 16",""],
+  [94,"2026-07-20",19,0,"ET","R32 W11","R32 W12","Mercedes-Benz Stadium, Atlanta","Round of 16",""],
+  [95,"2026-07-21",15,0,"CT","R32 W13","R32 W14","Estadio Azteca, Mexico City","Round of 16",""],
+  [96,"2026-07-21",19,0,"CA-PT","R32 W15","R32 W16","BC Place, Vancouver","Round of 16",""],
+
+  // ── QUARTERFINALS (July 25-27) ──
+  [97,"2026-07-25",15,0,"ET","QF1","QF2","MetLife Stadium, New York/NJ","Quarterfinal",""],
+  [98,"2026-07-25",19,0,"CT","QF3","QF4","AT&T Stadium, Dallas","Quarterfinal",""],
+  [99,"2026-07-26",15,0,"ET","QF5","QF6","Hard Rock Stadium, Miami","Quarterfinal",""],
+  [100,"2026-07-26",19,0,"PT","QF7","QF8","SoFi Stadium, Los Angeles","Quarterfinal",""],
+
+  // ── SEMIFINALS ──
+  [101,"2026-08-02",19,0,"ET","SF1","SF2","MetLife Stadium, New York/NJ","Semifinal",""],
+  [102,"2026-08-05",19,0,"PT","SF3","SF4","SoFi Stadium, Los Angeles","Semifinal",""],
+
+  // ── THIRD PLACE ──
+  [103,"2026-08-08",15,0,"ET","3rd Team 1","3rd Team 2","Hard Rock Stadium, Miami","Third Place",""],
+
+  // ── FINAL ──
+  [104,"2026-08-09",19,0,"ET","Finalist 1","Finalist 2","MetLife Stadium, New York/NJ","Final",""],
+];
+
+const MATCHES=RAW.map(r=>{
+  const[id,date,etH,etM,tz,t1,t2,venue,stage,group]=r;
+  const ist=etToIST(date,etH,etM,tz);
+  const istDate=ist.toISOString().slice(0,10);
+  const isTBD=n=>!FLAGS[n];
+  return{id,date,etH,etM,tz,team1:t1,team2:t2,venue,stage,group,ist,istDate,
+    t1tbd:isTBD(t1),t2tbd:isTBD(t2),
+    local:fmtLocal(etH,etM,tz)};
+});
+
+const todayIST=new Date(Date.now()+5.5*3600000).toISOString().slice(0,10);
+
+const STAGES=[
+  {key:"all",label:"All"},
+  {key:"Group Stage",label:"Group Stage"},
+  {key:"Round of 32",label:"R32"},
+  {key:"Round of 16",label:"R16"},
+  {key:"Quarterfinal",label:"QF"},
+  {key:"Semifinal",label:"SF"},
+  {key:"Third Place",label:"3rd Place"},
+  {key:"Final",label:"Final"},
+];
+
+function stageClass(s){
+  if(s==="Group Stage")return"stage-group";
+  if(s==="Round of 32")return"stage-r32";
+  if(s==="Round of 16")return"stage-r16";
+  if(s==="Quarterfinal")return"stage-qf";
+  if(s==="Semifinal")return"stage-sf";
+  if(s==="Final"||s==="Third Place")return"stage-final";
+  return"";
+}
+
+let activeStage="all",activeGroup="",searchQuery="";
+
+// Build stage pills
+const sf=document.getElementById("stageFilters");
+STAGES.forEach(s=>{
+  const btn=document.createElement("button");
+  btn.className="pill"+(s.key==="all"?" active":"");
+  btn.textContent=s.label;
+  btn.onclick=()=>{
+    activeStage=s.key;
+    document.querySelectorAll("#stageFilters .pill").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    render();
+  };
+  sf.appendChild(btn);
+});
+
+document.getElementById("search").addEventListener("input",e=>{searchQuery=e.target.value.trim().toLowerCase();render()});
+document.getElementById("groupFilter").addEventListener("change",e=>{activeGroup=e.target.value;render()});
+
+function filtered(){
+  return MATCHES.filter(m=>{
+    if(activeStage!=="all"&&m.stage!==activeStage)return false;
+    if(activeGroup&&m.group!==activeGroup)return false;
+    if(searchQuery){
+      const hay=[m.team1,m.team2,m.venue,m.stage,m.group].join(" ").toLowerCase();
+      if(!hay.includes(searchQuery))return false;
+    }
+    return true;
+  });
+}
+
+function render(){
+  const matches=filtered();
+  document.getElementById("count").textContent=matches.length;
+  const main=document.getElementById("main");
+  if(!matches.length){
+    main.innerHTML=`<div class="empty"><h3>No matches found</h3><p>Try adjusting your filters.</p></div>`;
+    return;
+  }
+  const byDate={};
+  matches.forEach(m=>{
+    if(!byDate[m.istDate])byDate[m.istDate]=[];
+    byDate[m.istDate].push(m);
+  });
+  const sortedDates=Object.keys(byDate).sort();
+  main.innerHTML=sortedDates.map(dk=>{
+    const dm=byDate[dk];
+    const d=new Date(dk+"T12:00:00Z");
+    const label=d.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    const isToday=dk===todayIST;
+    const cards=dm.map(m=>{
+      const gLabel=m.group?` · ${m.group}`:"";
+      const t1name=m.t1tbd?m.team1:m.team1;
+      const t2name=m.t2tbd?m.team2:m.team2;
+      const t1f=m.t1tbd?"❓":flag(m.team1);
+      const t2f=m.t2tbd?"❓":flag(m.team2);
+      const istStr=m.ist.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",hour12:true});
+      // short venue
+      const vshort=m.venue.split(",")[0];
+      const vcity=m.venue.includes(",")?m.venue.split(",").slice(1).join(",").trim():"";
+      return`<div class="card ${stageClass(m.stage)}${isToday?" today-match":""}">
+  <div class="card-top">
+    <span class="stage-badge">${m.stage}${gLabel}</span>
+    <span class="match-num">#${m.id}</span>
+  </div>
+  <div class="teams">
+    <div class="team">
+      <div class="team-flag">${t1f}</div>
+      <div class="team-name${m.t1tbd?" tbd":""}">${t1name}</div>
+    </div>
+    <div class="vs">VS</div>
+    <div class="team">
+      <div class="team-flag">${t2f}</div>
+      <div class="team-name${m.t2tbd?" tbd":""}">${t2name}</div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="venue">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span title="${m.venue}">${vshort}${vcity?', '+vcity:''}</span>
+    </div>
+    <div class="times">
+      <div class="ist-time">${istStr} IST</div>
+      <div class="local-time">${m.local}</div>
+    </div>
+  </div>
+</div>`;
+    }).join("");
+    return`<div class="date-group">
+  <div class="date-heading">
+    <div class="date-label">${label}</div>
+    ${isToday?'<span class="today-badge">Today</span>':""}
+    <div class="date-line"></div>
+    <div class="date-sub">${dm.length} match${dm.length>1?"es":""}</div>
+  </div>
+  <div class="match-grid">${cards}</div>
+</div>`;
+  }).join("");
+}
+render();
+</script>
+</body>
+</html>
